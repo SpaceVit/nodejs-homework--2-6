@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const ctrl = require("../../contollers/auth");
+const { auth: ctrl } = require("../../contollers");
 const { ctrlWrapper } = require("../../helpers");
-const { validateBody } = require("../../middlewares");
+const { validateBody, authenticate } = require("../../middlewares");
 const { schemas } = require("../../models/user");
 
 // signup
 router.post(
-  "/register",
+  "/signup",
   validateBody(schemas.registerSchema),
   ctrlWrapper(ctrl.register)
 );
@@ -18,4 +18,7 @@ router.post(
   ctrlWrapper(ctrl.login)
 );
 
+router.get("/current", authenticate, ctrlWrapper(ctrl.getCurrent));
+
+router.get("/logout", authenticate, ctrlWrapper(ctrl.logout));
 module.exports = router;
